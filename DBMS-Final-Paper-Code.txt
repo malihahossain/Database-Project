@@ -1,0 +1,308 @@
+CREATE DATABASE landlord_tenant_registry_info;
+
+CREATE TABLE House
+(
+    House_ID int(100) NOT null PRIMARY KEY,
+    House_Name varchar(100),
+    Location varchar(100)
+);
+
+
+
+CREATE TABLE Land_lord
+( 
+Owner_Name varchar(100)NOT Null ,
+Owner_Mob int(100) NOT Null , 
+House_Id int(100)NOT null, 
+Owner_Id int(100)NOT Null, 
+NID int(100) NOT null, 
+DOB date, 
+Gender varchar(100), 
+Occupation varchar(100),
+Religion varchar(100), 
+Maritial_status varchar(100),
+ Present_address varchar(100), 
+Permanent_address varchar(100)
+ );
+
+CREATE TABLE tenant
+(
+Tenant_Name varchar(100)NOT null,
+Tenant_ID int(100)NOT null,
+Tenant_Mob int(100) NOT null,
+Owner_Name varchar(100) NoT null,
+Owner_Mob int(100)Not null,
+NID int(100) NOT null,
+DOB date,
+Gender varchar(100),
+Martial_status varchar(100),
+Occupation varchar(100),
+Education_qualification varchar(100),
+Religion varchar(100),
+Permanent_address varchar(100),
+Office_address varchar(100)
+);
+
+
+CREATE TABLE Tenant_Rent_info 
+
+(Flat_No int(100)NOT null PRIMARY KEY, 
+Tenant_Name varchar(100)NOT null,
+Tenant_ID int(100)NOT null,
+Tenant_Mob int(100) NOT null,
+Maintenance_charge decimal(7,2)NOT null, 
+Gas_Bill decimal(7,2)NOT null,
+Electric_Bill decimal(7,2)NOT null,
+Water_Bill decimal(7,2)NOT null);
+
+CREATE TABLE Tenant_Member_info 
+(
+Member_Name varchar(100),
+Mob int(100)NOT null, 
+Gender varchar(100),   
+Flat_No int(100)NOT null,
+Tenant_ID int(100),
+Member_Age int(100),
+Occupation varchar(100),
+Relation_With_Tenant varchar(100)
+);
+
+ALTER TABLE land_lord 
+ADD CONSTRAINT land_lord_pk 
+Primary KEY(Owner_Name,Owner_Mob);
+
+ALTER TABLE land_lord
+ADD CONSTRAINT house
+FOREIGN KEY(House_Id)
+REFERENCES house(House_Id);
+
+ALTER TABLE tenant
+ADD CONSTRAINT tenant_pk
+PRIMARY KEY(Tenant_Name,Tenant_ID,Tenant_Mob);
+
+ALTER TABLE tenant
+ADD CONSTRAINT landlord
+FOREIGN KEY(Owner_Name,Owner_Mob)
+REFERENCES land_lord(Owner_Name,Owner_Mob);
+
+
+ALTER TABLE tenant_rent_info
+ADD CONSTRAINT tenant
+FOREIGN KEY(Tenant_Name,Tenant_ID,Tenant_Mob)
+REFERENCES tenant(Tenant_Name,Tenant_ID,Tenant_Mob);
+
+
+ALTER TABLE tenant_member_info
+ADD CONSTRAINT tenant_member_info_pk
+PRIMARY KEY(Member_Name,Mob);
+
+ALTER TABLE tenant_member_info
+ADD CONSTRAINT tenant_rent_info
+FOREIGN KEY(FLat_No)
+REFERENCES tenant_rent_info(FLat_No);
+
+
+Alter table tenant_rent_info
+add column Total_rent_fee dec(7,2);
+
+
+CREATE VIEW land_lord_view AS
+SELECT Owner_Name,Gender,Maritial_status
+FROM land_lord;
+SELECT * 
+FROM land_lord_view;
+
+CREATE VIEW tenant_view AS
+SELECT Tenant_Name,Owner_Name,Gender,Martial_status
+FROM tenant;
+SELECT * 
+FROM tenant_view;
+
+
+Alter Table tenant_rent_info
+Add Column Month varchar(100);
+
+CREATE VIEW tenant_rent_info_view AS
+SELECT Flat_No,Tenant_Name,Maintenance_charge,Gas_Bill,Electric_Bill,Water_Bill,Month
+FROM tenant_rent_info;
+SELECT *
+FROM tenant_rent_info_view;
+
+CREATE VIEW tenant_member_info_view AS
+SELECT
+Member_Name,Occupation,Relation_With_Tenant
+FROM tenant_member_info;
+SELECT *
+FROM tenant_member_info_view;
+
+INSERT INTO house VALUES (526, 'Mishuvila', '15 Piterson Road,Mirpur,Kazipara,Dhaka-1216');
+
+INSERT INTO land_lord VALUES ('Azad Khan',01777777777,526,1,1112223334,1961-12-12,'Male','Doctor','Islam','Married','15 Piterson Road,Mirpur,Kazipara,Dhaka-1216','15 Piterson Road,Mirpur,Kazipara,Dhaka-1216');
+
+INSERT INTO tenant VALUES('Sheikh Tanvir',101,01722222222,'Azad Khan',01777777777,1112223334,1963-12-12,'Male','Married','Banker','MBA','Islam','Dhanmondi','Dhanmondi FR Tower');
+INSERT INTO tenant VALUES('Asaf Uddoula',102,01733333333,'Azad Khan',01777777777,1112223335,1964-12-12,'Male','Married','Banker','MA','Islam','Uttora','Gulshan Monem Business');
+INSERT INTO tenant VALUES('Ranbir Sheikh',103,01744444444,'Azad Khan',01777777777,1112223336,1965-12-12,'Male','Married','Businessman','BBA in Accounting','Islam','Lalmatia,dhaka','Lalmatia Silver Tower');
+INSERT INTO tenant VALUES('Feroza Begum',104,01755555555,'Azad Khan',01777777777,1112223337,1966-12-12,'female','Single','Housewife','MA','Islam','' '');
+INSERT INTO tenant VALUES('Moinul Hossain',105,01766666666,'Azad Khan',01777777777,1112223338,1967-12-12,'Male','Married','Banker','MBA','Islam','Mirpur,dhaka','Mirpur-11,Rd-24/4');
+INSERT INTO tenant VALUES('Atikur Rohman',106,01788888888,'Azad Khan',01777777777,1112223339,1968-12-12,'Male','Married','Businessman','MA','Islam','Kakrail','Motijhil Shapla Chottor,hse-1');
+INSERT INTO tenant VALUES('Jhountu Gomej',107,01799999999,'Azad Khan',01777777777,1112223341,1969-12-12,'Male','Married','Teacher','Bsc','Islam','','Shawrapara,Green University');
+INSERT INTO tenant VALUES('Joita Chowdhuri',108,01711111111,'Azad Khan',01777777777,1112223342,1970-12-12,'Female','Married','Lawyer','Bsc','Islam','Bikrompur,Gazipur','Motijhil,Building 21');
+
+
+INSERT INTO tenant_rent_info VALUES(1,'Sheikh Tanvir',101,01722222222,9000,800,504,650,'');
+INSERT INTO tenant_rent_info VALUES(2,'Asaf Uddoula',102,01733333333,10000,800,614,650,'');
+INSERT INTO tenant_rent_info VALUES(3,'Ranbir Sheikh',103,01744444444,10000,800,430,650,'');
+INSERT INTO tenant_rent_info VALUES(4,'Feroza Begum',104,01755555555,8000,800,389,650,'');
+INSERT INTO tenant_rent_info VALUES(5,'Moinul Hossain',105,01766666666,10000,800,500,650,'');
+INSERT INTO tenant_rent_info VALUES(6,'Atikur Rohman',106,01788888888,11000,800,575,650,'');
+INSERT INTO tenant_rent_info VALUES(7,'Jhountu Gomej',107,01799999999,9000,800,604,650,'');
+INSERT INTO tenant_rent_info VALUES(8,'Joita Chowdhuri',108,01711111111,9000,800,675,650,'');
+
+INSERT INTO tenant_member_info VALUES('Jolly Akter',01888888888,'Female',1,101,32,'Housewife','Wife'); 
+INSERT INTO tenant_member_info VALUES('Shiekh Ikbal',01888888888,'Male',1,101,3,'','Son');
+INSERT INTO tenant_member_info VALUES('Shiekh Akibuddin',01818888888,'Male',1,101,32,'Retired','Father');
+INSERT INTO tenant_member_info VALUES('Rumki Chowdhuri',01828888888,'Female',2,102,28,'Service Holder','Wife');
+INSERT INTO tenant_member_info VALUES('Ayesha Khatun',01828888888,'Female',3,103,32,'teacher','Wife');
+INSERT INTO tenant_member_info VALUES('Marzia Islam',01838888888,'Female',4,104,30,'Banker','Daughter');
+INSERT INTO tenant_member_info VALUES('Zohirul',01838888888,'Male',4,104,16,'Student','Grandchildren'); 
+INSERT INTO tenant_member_info VALUES('Sumi Chowdhuri',01848888888,'Female',5,105,35,'Housewife','Wife'); 
+INSERT INTO tenant_member_info VALUES('Sumaiya Hasnat',01858888888,'Female',5,105,20,'Student','Daughter'); 
+INSERT INTO tenant_member_info VALUES('Josna Akter',01868888888,'Female',6,106,28,'Service holder','Wife');
+INSERT INTO tenant_member_info VALUES('Rabeya Islam',01868888888,'Female',7,107,35,'Housewife','Wife'); 
+INSERT INTO tenant_member_info VALUES('Maruf Hossain',01868888888,'Male',7,107,10,'Student','Son'); 
+INSERT INTO tenant_member_info VALUES('Jolly Akter',01878888888,'Female',8,108,33,'Teacher','Wife'); 
+INSERT INTO tenant_member_info VALUES('Mobarok Hossain',01878888888,'Male',8,108,27,'Service Holder','Son');
+
+
+SELECT *
+FROM tenant_member_info
+WHERE Gender='Female'
+AND
+(Member_Age>=18 OR Flat_No=1);
+
+SELECT Gender,Member_Age
+FROM tenant_member_info
+WHERE Flat_No IN(1,2,3);
+
+SELECT*
+FROM tenant_member_info
+WHERE Member_Name LIKE 'A%';
+
+UPDATE tenant_rent_info
+SET Month='january';
+
+Update Tenant_Member_info
+Set Member_age=62
+where member_name='Sheikh Akibuddin';
+
+SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+WHERE Tenant_ID=101;
+SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+WHERE Tenant_ID=102;
+SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+WHERE Tenant_ID=103;
+SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+WHERE Tenant_ID=104;
+SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+WHERE Tenant_ID=105;
+SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+WHERE Tenant_ID=106;
+SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+WHERE Tenant_ID=107;
+SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+WHERE Tenant_ID=108;
+
+
+SELECT Total_rent_fee-Maintenance_charge
+FROM tenant_rent_info
+WHERE Flat_No=1;
+
+SELECT(SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+WHERE Tenant_ID=108)*2;
+
+SELECT(SELECT Maintenance_charge+Gas_Bill+Electric_Bill+Water_Bill
+FROM tenant_rent_info
+       WHERE Tenant_ID=101)/2;
+
+
+UPDATE tenant_rent_info SET Total_rent_fee=10954 WHERE Tenant_ID=101;
+UPDATE tenant_rent_info SET Total_rent_fee=12064 WHERE Tenant_ID=102; 
+UPDATE tenant_rent_info SET Total_rent_fee=11880 WHERE Tenant_ID=103;
+UPDATE tenant_rent_info SET Total_rent_fee=9832 WHERE Tenant_ID=104;
+UPDATE tenant_rent_info SET Total_rent_fee=11950 WHERE Tenant_ID=105;
+UPDATE tenant_rent_info SET Total_rent_fee=13025 WHERE Tenant_ID=106;
+UPDATE tenant_rent_info SET Total_rent_fee=11054 WHERE Tenant_ID=107;
+UPDATE tenant_rent_info SET Total_rent_fee=11125 WHERE Tenant_ID=108;
+
+
+SELECT COUNT(*),MAX(Total_rent_fee),MIN(Total_rent_fee),SUM(Total_rent_fee),AVG(Total_rent_fee)
+FROM tenant_rent_info;
+
+
+SELECT *
+FROM tenant_member_info
+WHERE Tenant_ID=101
+GROUP BY Relation_With_Tenant
+ORDER BY Member_Name ;
+
+
+CREATE VIEW house_view AS
+SELECT House_Name,Location
+FROM house;
+
+SELECT *
+FROM tenant,tenant_member_info
+WHERE tenant.Tenant_ID=tenant_member_info.Tenant_ID;
+
+SELECT * 
+FROM tenant_rent_info
+WHERE Total_rent_fee>(SELECT AVG(Total_rent_fee)FROM tenant_rent_info);
+
+CREATE VIEW house_view AS
+SELECT House_Name,Location
+FROM house;
+
+DROP VIEW house_view;
+
+Create DATABASE apartment_info;
+
+DROP DATABASE apartment_info;
+
+ALTER TABLE tenant
+ADD COLUMN No_of_tenant_member int(100);
+
+ALTER TABLE tenant
+DROP COLUMN No_of_tenant_member;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
